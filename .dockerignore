@@ -1,0 +1,10 @@
+# flyctl launch added from .gitignore
+# Dependencies
+**/node_modules
+
+# Environment variables
+**/.env
+
+# macOS specific files
+**/.DS_Store
+fly.toml
