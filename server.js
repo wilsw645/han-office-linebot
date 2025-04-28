@@ -640,5 +640,5 @@ const host = '0.0.0.0'; // Listen on all available network interfaces
 
 app.listen(port, host, () => {
   console.log(`Line Bot server listening on ${host}:${port}`);
-  console.log('Make sure to set the Webhook URL in Line Developers Console to: https://hbd-line-bot.fly.dev/webhook'); // Use the actual app name
+  console.log('Make sure to set the Webhook URL in Line Developers Console to: https://han-office-linebot.zeabur.app/webhook');
 });
