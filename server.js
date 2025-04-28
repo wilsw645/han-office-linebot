@@ -83,6 +83,13 @@ function getRandomQuote() {
 const client = new line.Client(lineConfig);
 const app = express();
 
+// Allow raw body for LINE signature verification
+app.use(express.json({
+  verify: (req, res, buf) => {
+    req.rawBody = buf;
+  }
+}));
+
 // Initialize Google Generative AI
 const genAI = new GoogleGenerativeAI(geminiApiKey);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest"}); // Try gemini-1.5-flash-latest
