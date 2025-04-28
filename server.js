@@ -2,6 +2,7 @@
 
 require('dotenv').config(); // Load environment variables from .env file
 const express = require('express');
+const bodyParser = require('body-parser');
 const line = require('@line/bot-sdk');
 const axios = require('axios');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
@@ -97,15 +98,22 @@ const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest"}); // 
 // Middleware to verify Line signature (place before JSON parsing if possible, or handle raw body)
 // Note: line.middleware needs the raw body. Express's json parser consumes it.
 // We'll use a workaround to get the raw body for the webhook path.
-app.post('/webhook', line.middleware(lineConfig), (req, res) => {
-  Promise
-    .all(req.body.events.map(handleEvent))
-    .then((result) => res.json(result))
-    .catch((err) => {
-      console.error('Webhook Error:', err);
-      res.status(500).end();
-    });
-});
+app.post('/webhook',
+  bodyParser.raw({ type: '*/*' }),
+  line.middleware(lineConfig),
+  (req, res) => {
+    Promise
+      .all(req.body.events.map(handleEvent))
+      .then((result) => res.json(result))
+      .catch((err) => {
+        console.error('Webhook Error:', err);
+        res.status(500).end();
+      });
+  }
+);
+
+// Add express.json() after /webhook so other APIs use JSON parsing
+app.use(express.json());
 
 // Event handler function
 async function handleEvent(event) {
